@@ -41,6 +41,9 @@ export default function PedidoPage() {
   const { theme, user } = useAuth();
   const router = useRouter();
   const paypalRef = useRef(null);
+  const [envio, setEnvio] = useState(0);
+  const [total, setTotal] = useState(0);
+
 
   // Light/dark helpers
   const light = (s) => (theme === "light" ? s : "");
@@ -99,8 +102,7 @@ export default function PedidoPage() {
 
   // Cálculos de totales
   const subtotal = carrito.reduce((sum, it) => sum + it.producto.precio * it.cantidad, 0);
-  const envio = subtotal > 500 ? 0 : 99;
-  const total = subtotal + envio;
+
 
   // Inicio de modos crear/editar
   const startCreating = () => {
@@ -160,6 +162,45 @@ export default function PedidoPage() {
       setCreatingDir(false);
     }
   };
+
+  useEffect(() => {
+  const calcularEnvio = async () => {
+    if (!carrito.length) return;
+
+    // Transformar carrito al formato que espera el backend
+    const items = carrito.map((item) => ({
+      price: item.producto.precio,
+      quantity: item.cantidad,
+      size_ml: item.producto.tamano || 0, // Asegúrate que esta propiedad exista
+    }));
+
+    try {
+      const res = await fetch(`${CONFIGURACIONES.BASEURL2}/shipping/calcular`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ items }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setEnvio(data.calculo.costo_envio);
+        setTotal(data.calculo.total);
+      } else {
+        console.error("❌ Error al calcular envío:", data.message);
+        setEnvio(99); // fallback
+        setTotal(subtotal + 99);
+      }
+    } catch (err) {
+      console.error("❌ Error en fetch envio:", err.message);
+      setEnvio(99); // fallback
+      setTotal(subtotal + 99);
+    }
+  };
+
+  calcularEnvio();
+}, [carrito]);
 
   // Actualizar dirección existente
   const handleEditDirectionSubmit = async (e) => {
@@ -232,6 +273,7 @@ export default function PedidoPage() {
                   name: ci.producto.name,
                   price: parseFloat(ci.producto.precio.toFixed(2)),
                   quantity: ci.cantidad,
+                  size_ml: ci.producto.tamano,
                 })),
                 total: parseFloat(total.toFixed(2)),
               }),
@@ -801,7 +843,7 @@ export default function PedidoPage() {
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
                     <AlertDescription>
-                      ¡Faltan ${(500 - subtotal).toFixed(2)} para envío gratis!
+                      ¡Faltan ${(500 - total).toFixed(2)} para envío gratis!
                     </AlertDescription>
                   </Alert>
                 )}
