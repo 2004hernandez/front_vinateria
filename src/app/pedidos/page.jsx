@@ -163,16 +163,24 @@ export default function PedidoPage() {
     }
   };
 
-  useEffect(() => {
+useEffect(() => {
   const calcularEnvio = async () => {
     if (!carrito.length) return;
 
-    // Transformar carrito al formato que espera el backend
     const items = carrito.map((item) => ({
       price: item.producto.precio,
       quantity: item.cantidad,
-      size_ml: item.producto.tamano || 0, // Asegúrate que esta propiedad exista
+      size_ml: item.producto.tamano || 0,
     }));
+
+    const subtotalCalculado = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+    // ✅ Si es envío gratis, no hacer la petición al backend
+    if (subtotalCalculado >= 500) {
+      setEnvio(0);
+      setTotal(subtotalCalculado);
+      return;
+    }
 
     try {
       const res = await fetch(`${CONFIGURACIONES.BASEURL2}/shipping/calcular`, {
@@ -190,17 +198,18 @@ export default function PedidoPage() {
       } else {
         console.error("❌ Error al calcular envío:", data.message);
         setEnvio(99); // fallback
-        setTotal(subtotal + 99);
+        setTotal(subtotalCalculado + 99);
       }
     } catch (err) {
       console.error("❌ Error en fetch envio:", err.message);
       setEnvio(99); // fallback
-      setTotal(subtotal + 99);
+      setTotal(subtotalCalculado + 99);
     }
   };
 
   calcularEnvio();
 }, [carrito]);
+
 
   // Actualizar dirección existente
   const handleEditDirectionSubmit = async (e) => {
