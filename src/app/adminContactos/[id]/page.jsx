@@ -6,12 +6,12 @@ import { useRouter, useParams } from "next/navigation"
 import Breadcrumbs from "../../../components/Breadcrumbs"
 import { CONFIGURACIONES } from "../../config/config"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "../../../components/ui/button"
+import { Textarea } from "../../../components/ui/textarea"
+import { Badge } from "../../../components/ui/badge"
+import { Skeleton } from "../../../components/ui/skeleton"
+import { Alert, AlertDescription } from "../../../components/ui/alert"
+import { Separator } from "../../../components/ui/separator"
 import {
   Mail,
   User,

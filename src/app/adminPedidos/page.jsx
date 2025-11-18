@@ -5,13 +5,13 @@ import { CONFIGURACIONES } from "../config/config"
 import Breadcrumbs from "../../components/Breadcrumbs"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../../components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "../../../components/ui/alert"
+import { Skeleton } from "../../../components/ui/skeleton"
 import {
   Package,
   Users,

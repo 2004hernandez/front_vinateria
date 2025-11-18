@@ -6,10 +6,10 @@ import { useAuth } from "../../context/authContext"
 import Breadcrumbs from "../../components/Breadcrumbs"
 import { CONFIGURACIONES } from "../config/config"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Badge } from "../../../components/ui/badge"
+import { Skeleton } from "../../../components/ui/skeleton"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+import { Button } from "../../../components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
   Mail,

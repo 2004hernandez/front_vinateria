@@ -22,7 +22,7 @@ import {
   Trash2,
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,9 +33,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { Alert, AlertDescription } from "../../../components/ui/alert";
+import { Separator } from "../../../components/ui/separator";
 
 export default function PedidoPage() {
   const { theme, user } = useAuth();

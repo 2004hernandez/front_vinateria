@@ -21,11 +21,11 @@ import {
   CheckCircle,
 } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "../../../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Badge } from "../../../components/ui/badge"
+import { Skeleton } from "../../../components/ui/skeleton"
+import { Alert, AlertDescription } from "../../../components/ui/alert"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -46,7 +46,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "../../../components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
