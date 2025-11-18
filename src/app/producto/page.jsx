@@ -15,21 +15,21 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "../../../src/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "../../../src/components/ui/card";
+import { Input } from "../../../src/components/ui/input";
+import { Label } from "../../../src/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "../../../components/ui/badge";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { Alert, AlertDescription } from "../../../components/ui/alert";
-import { Separator } from "../../../components/ui/separator";
+} from "../../../src/components/ui/select";
+import { Badge } from "../../../src/components/ui/badge";
+import { Skeleton } from "../../../src/components/ui/skeleton";
+import { Alert, AlertDescription } from "../../../src/components/ui/alert";
+import { Separator } from "../../../src/components/ui/separator";
 
 const RESTOCK_DAYS = 5;
 

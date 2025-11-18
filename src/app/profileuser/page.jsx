@@ -20,15 +20,15 @@ import {
   UserCheck,
 } from "lucide-react";
 
-import { Button } from "../../../components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Badge } from "../../../components/ui/badge";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { Alert, AlertDescription } from "../../../components/ui/alert";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "../../../components/ui/separator";
+import { Button } from "../../../src/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../src/components/ui/card";
+import { Input } from "../../../src/components/ui/input";
+import { Label } from "../../../src/components/ui/label";
+import { Badge } from "../../../src/components/ui/badge";
+import { Skeleton } from "../../../src/components/ui/skeleton";
+import { Alert, AlertDescription } from "../../../src/components/ui/alert";
+import { Avatar, AvatarFallback, AvatarImage } from "../../../src/components/ui/avatar";
+import { Separator } from "../../../src/components/ui/separator";
 
 function UserProfile() {
   const [userData, setUserData] = useState(null);

@@ -30,7 +30,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "../../../components/ui/table"
 import { Separator } from "../../../components/ui/separator"
 
 export default function DetallePedidoPage() {

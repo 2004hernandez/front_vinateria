@@ -18,19 +18,19 @@ import {
   ShoppingBag,
 } from "lucide-react";
 
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../../src/components/ui/button";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "../../../components/ui/badge";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { Alert, AlertDescription } from "../../../components/ui/alert";
-import { Separator } from "../../../components/ui/separator";
+} from "../../../src/components/ui/card";
+import { Input } from "../../../src/components/ui/input";
+import { Badge } from "../../../src/components/ui/badge";
+import { Skeleton } from "../../../src/components/ui/skeleton";
+import { Alert, AlertDescription } from "../../../src/components/ui/alert";
+import { Separator } from "../../../src/components/ui/separator";
 
 export default function CarritoPage() {
   const { theme } = useAuth();

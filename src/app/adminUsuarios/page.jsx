@@ -21,14 +21,14 @@ import {
   CheckCircle,
 } from "lucide-react"
 
-import { Button } from "../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "../../../components/ui/badge"
-import { Skeleton } from "../../../components/ui/skeleton"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Button } from "../../../src/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../src/components/ui/card"
+import { Badge } from "../../../src/components/ui/badge"
+import { Skeleton } from "../../../src/components/ui/skeleton"
+import { Alert, AlertDescription } from "../../../src/components/ui/alert"
+import { Input } from "../../../src/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../src/components/ui/select"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../src/components/ui/table"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,7 +36,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "../../../src/components/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -46,7 +46,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "../../../components/ui/alert-dialog"
+} from "../../../src/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -54,8 +54,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from "../../../src/components/ui/dialog"
+import { Label } from "../../../src/components/ui/label"
 
 function AdminPage() {
   const { user, isAuthenticated, theme } = useAuth()

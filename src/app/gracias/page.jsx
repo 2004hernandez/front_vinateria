@@ -1,6 +1,6 @@
 "use client"; // Esto es esencial para usar hooks y componentes del cliente
 
-import { useAuth } from "@/context/authContext";
+import { useAuth } from "../../../src/context/authContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Head from "next/head";

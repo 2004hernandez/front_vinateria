@@ -2,13 +2,13 @@
 
 import { useState } from "react"
 import { CONFIGURACIONES } from "../config/config"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "../../../components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "../../../components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../src/components/ui/card"
+import { Button } from "../../../src/components/ui/button"
+import { Input } from "../../../src/components/ui/input"
+import { Label } from "../../../src/components/ui/label"
+import { Textarea } from "../../../src/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../../src/components/ui/select"
+import { Alert, AlertDescription } from "../../../src/components/ui/alert"
 import { Mail, Phone, User, MessageSquare, Send, CheckCircle, AlertCircle, Headphones, Star } from "lucide-react"
 
 function ContactPage() {

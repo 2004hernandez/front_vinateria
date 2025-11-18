@@ -19,12 +19,12 @@ import {
   AlertCircle,
 } from "lucide-react"
 
-import { Button } from "../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "../../../components/ui/textarea"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
+import { Button } from "../../../src/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../src/components/ui/card"
+import { Input } from "../../../src/components/ui/input"
+import { Label } from "../../../src/components/ui/label"
+import { Textarea } from "../../../src/components/ui/textarea"
+import { Alert, AlertDescription } from "../../../src/components/ui/alert"
 
 function AdminProductsPage() {
   const { user, isAuthenticated, theme } = useAuth()

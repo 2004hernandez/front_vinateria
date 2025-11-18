@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import Navbar from "../../src/components/Navbar";
+import Footer from "../../src/components/Footer";
 import { AuthProvider } from "../context/authContext";
 import { LogoProvider } from "../context/LogoContext";
 

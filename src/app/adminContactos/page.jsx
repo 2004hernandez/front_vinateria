@@ -5,12 +5,12 @@ import Link from "next/link"
 import { useAuth } from "../../context/authContext"
 import Breadcrumbs from "../../components/Breadcrumbs"
 import { CONFIGURACIONES } from "../config/config"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "../../../components/ui/badge"
-import { Skeleton } from "../../../components/ui/skeleton"
-import { Input } from "@/components/ui/input"
-import { Button } from "../../../components/ui/button"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../../src/components/ui/card"
+import { Badge } from "../../../src/components/ui/badge"
+import { Skeleton } from "../../../src/components/ui/skeleton"
+import { Input } from "../../../src/components/ui/input"
+import { Button } from "../../../src/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../src/components/ui/table"
 import {
   Mail,
   MessageSquare,
