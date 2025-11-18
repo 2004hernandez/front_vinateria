@@ -22,14 +22,14 @@ import {
   CheckCircle,
 } from "lucide-react"
 
-import { Button } from "../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "../../../components/ui/badge"
-import { Skeleton } from "../../../src/components/ui/skeleton"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "../../components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../components/ui/card"
+import { Badge } from "../../components/ui/badge"
+import { Skeleton } from "../../components/ui/skeleton"
+import { Alert, AlertDescription } from "../../components/ui/alert"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "../../components/ui/dialog"
+import { Input } from "../../components/ui/input"
+import { Label } from "../../components/ui/label"
 
 function AdminDashboard() {
   const { user, isAuthenticated, theme } = useAuth()
