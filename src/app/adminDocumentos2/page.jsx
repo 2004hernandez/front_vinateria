@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../..
 import { Button } from "../../../src/components/ui/button"
 import { Input } from "../../../src/components/ui/input"
 import { Label } from "../../../src/components/ui/label"
-import { Textarea } from "../../../components/ui/textarea"
+import { Textarea } from "../../../src/components/ui/textarea"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../src/components/ui/table"
 import { Badge } from "../../../src/components/ui/badge"
 import {

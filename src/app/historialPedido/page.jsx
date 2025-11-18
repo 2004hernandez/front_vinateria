@@ -20,12 +20,12 @@ import {
   ShoppingBag,
 } from "lucide-react"
 
-import { Button } from "../../../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "../../../components/ui/badge"
+import { Button } from "../../../src/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "../../../src/components/ui/card"
+import { Badge } from "../../../src/components/ui/badge"
 import { Skeleton } from "../../../src/components/ui/skeleton"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Alert, AlertDescription } from "../../../src/components/ui/alert"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../../../src/components/ui/table"
 
 export default function HistorialPedidosPage() {
   const { theme } = useAuth()
