@@ -70,7 +70,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src={logoUrl || "/fallback-logo.png"}
+            src= "/logo.webp"
             alt="Logo"
             width={120}
             height={120}

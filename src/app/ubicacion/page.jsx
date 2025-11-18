@@ -1,11 +1,63 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MapPin, Clock, Phone, Mail, Navigation, Calendar, ExternalLink, Building, Car, Bus } from "lucide-react"
+import { MapPin, Clock, Phone, Mail, Navigation, Calendar, Building, Car, Bus, ExternalLink } from "lucide-react"
 
 export default function UbicacionPage() {
+  const [userLocation, setUserLocation] = useState(null)
+  const [locationError, setLocationError] = useState(null)
+
+  const tiendaLat = 21.142226
+  const tiendaLng = -98.4199718
+
+  // Solicitar ubicación al cargar la vista
+  useEffect(() => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          })
+        },
+        (error) => {
+          console.error("Error obteniendo ubicación:", error)
+          setLocationError("No se pudo obtener tu ubicación. Activa los permisos de ubicación.")
+        }
+      )
+    } else {
+      setLocationError("Tu navegador no soporta geolocalización.")
+    }
+  }, [])
+
+  // Función para calcular distancia en km entre dos coordenadas
+  function calcularDistancia(lat1, lng1, lat2, lng2) {
+    const R = 6371 // Radio de la Tierra en km
+    const dLat = ((lat2 - lat1) * Math.PI) / 180
+    const dLng = ((lng2 - lng1) * Math.PI) / 180
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    return R * c
+  }
+
+  // Función para abrir Google Maps con la ruta
+  const handleComoLlegar = () => {
+    if (userLocation) {
+      const url = `https://www.google.com/maps/dir/?api=1&origin=${userLocation.lat},${userLocation.lng}&destination=${tiendaLat},${tiendaLng}&travelmode=driving`
+      window.open(url, "_blank")
+    } else {
+      alert("No se ha podido obtener tu ubicación actual.")
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <div className="container mx-auto px-6 py-16 pt-48">
@@ -23,7 +75,7 @@ export default function UbicacionPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
-          {/* Sección de Mapa */}
+          {/* Mapa */}
           <div className="order-2 lg:order-1">
             <Card className="border-0 shadow-2xl overflow-hidden">
               <CardHeader className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
@@ -58,6 +110,35 @@ export default function UbicacionPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <div className="text-center mt-6">
+              {userLocation ? (
+                <>
+                  <Button
+                    onClick={handleComoLlegar}
+                    className="bg-gradient-to-r from-green-600 to-blue-600 hover:opacity-90 text-white text-lg px-8 py-6 rounded-full shadow-lg transition-all duration-300"
+                  >
+                    <ExternalLink className="mr-2 h-5 w-5" />
+                    Cómo llegar desde mi ubicación
+                  </Button>
+                  <p className="mt-2 text-gray-700 dark:text-gray-300">
+                    Aproximadamente{" "}
+                    {calcularDistancia(
+                      userLocation.lat,
+                      userLocation.lng,
+                      tiendaLat,
+                      tiendaLng
+                    ).toFixed(2)}{" "}
+                    km de distancia
+                  </p>
+                </>
+              ) : (
+                <p className="text-gray-600 dark:text-gray-400 mt-4">
+                  {locationError || "Obteniendo tu ubicación..."}
+                </p>
+              )}
+            </div>
+
           </div>
 
           {/* Información de la ubicación */}
@@ -80,13 +161,14 @@ export default function UbicacionPage() {
                   <MapPin className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0" />
                   <div>
                     <p className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
-                      Av Juárez #22 esquina con Hilario Menindez
+                      Calle Prof. Hilario Menindez 78, Centro
                     </p>
-                    <p className="text-gray-600 dark:text-gray-400">Huejutla de Reyes Centro, México</p>
+                    <p className="text-gray-600 dark:text-gray-400">Huejutla de Reyes, Hidalgo, México</p>
                   </div>
                 </div>
               </CardContent>
             </Card>
+
 
             {/* Horario de Atención */}
             <Card className="border-0 shadow-xl">
@@ -112,7 +194,6 @@ export default function UbicacionPage() {
                       9:00 AM - 10:00 PM
                     </Badge>
                   </div>
-
                   <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                     <div className="flex items-center gap-3">
                       <Calendar className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
@@ -169,7 +250,7 @@ export default function UbicacionPage() {
             </Card>
 
             {/* Botón para Google Maps */}
-            
+
           </div>
         </div>
 
