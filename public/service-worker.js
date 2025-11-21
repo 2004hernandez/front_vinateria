@@ -1,83 +1,112 @@
+// =======================
+// CONFIGURACIÓN GENERAL
+// =======================
 const CACHE_NAME = 'vinateria-cache-v1';
-const API_BASE_URL = 'http://localhost:4000/api';
+const API_BASE_URL = 'https://vinateria-back-backend.yf3yhp.easypanel.host/api';
+
 const STATIC_ASSETS = [
-  '/', // página principal
+  '/',
   '/favicon.ico',
   '/logo.webp',
   '/manifest.json',
 ];
 
-// 🔹 Instalación: pre-cache de recursos estáticos
+// =======================
+// INSTALL — PRE-CACHE
+// =======================
 self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Instalando...');
+  console.log('[SW] Instalando...');
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      console.log('[Service Worker] Caché inicial creada');
-      return cache.addAll(STATIC_ASSETS);
-    })
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      console.log('[SW] Caché inicial creada');
+      await cache.addAll(STATIC_ASSETS);
+
+      // 🔹 Activación inmediata del SW
+      await self.skipWaiting();
+    })()
   );
-  self.skipWaiting();
 });
 
-// 🔹 Activación: limpiar versiones antiguas
+// =======================
+// ACTIVATE — LIMPIAR CACHÉS ANTIGUAS
+// =======================
 self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activado');
+  console.log('[SW] Activado');
+
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
+    (async () => {
+      const keys = await caches.keys();
+
+      // Elimina cachés viejas que no coincidan con la versión actual
+      await Promise.all(
         keys.map((key) => {
           if (key !== CACHE_NAME) {
-            console.log('[Service Worker] Borrando caché antigua:', key);
+            console.log('[SW] Eliminando caché antigua:', key);
             return caches.delete(key);
           }
         })
-      )
-    )
+      );
+
+      // 🔹 Toma control inmediato de las pestañas
+      await self.clients.claim();
+    })()
   );
-  self.clients.claim();
 });
 
-// 🔹 Interceptar peticiones
+// =======================
+// FETCH — ESTRATEGIAS DE CACHÉ
+// =======================
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // Si la petición va al backend o a una imagen, la cacheamos dinámicamente
-  if (request.url.startsWith(API_BASE_URL) || request.destination === 'image') {
+  const isAPI = request.url.startsWith(API_BASE_URL);
+  const isImage = request.destination === 'image';
+  const isNextAsset = request.url.includes('/_next/');
+
+  // ⚠️ No interceptar archivos internos de Next.js
+  if (isNextAsset) {
+    return;
+  }
+
+  // 🔹 API e imágenes → cacheThenNetwork
+  if (isAPI || isImage) {
     event.respondWith(cacheThenNetwork(request));
     return;
   }
 
-  // Para otros recursos, tratamos de obtener desde caché o red
+  // 🔹 Resto de archivos → cache first
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
-      return (
-        cachedResponse ||
-        fetch(request).then((networkResponse) => {
-          return caches.open(CACHE_NAME).then((cache) => {
-            cache.put(request, networkResponse.clone());
-            return networkResponse;
-          });
-        })
-      );
+      if (cachedResponse) return cachedResponse;
+
+      return fetch(request).then((networkResponse) => {
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, networkResponse.clone());
+          return networkResponse;
+        });
+      });
     })
   );
 });
 
-// 🔹 Función auxiliar para cachear dinámicamente peticiones de API o imágenes
+// =======================
+// FUNCIÓN AUXILIAR — cache then network
+// =======================
 async function cacheThenNetwork(request) {
   const cache = await caches.open(CACHE_NAME);
 
-  // Primero intenta obtener de caché
   const cachedResponse = await cache.match(request);
   if (cachedResponse) {
-    // Mientras devuelve el caché, intenta actualizarlo en segundo plano
+    // Actualizar en segundo plano
     fetch(request).then((networkResponse) => {
       cache.put(request, networkResponse.clone());
     });
+
     return cachedResponse;
   }
 
-  // Si no hay caché, va a la red y guarda la respuesta
   const networkResponse = await fetch(request);
   cache.put(request, networkResponse.clone());
   return networkResponse;

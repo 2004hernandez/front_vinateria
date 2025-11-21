@@ -26,20 +26,17 @@ export default function RootLayout({ children }) {
     console.log("🟢 RootLayout montado");
 
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then((registration) => {
-            console.log("✅ Service Worker registrado con éxito:", registration.scope);
-          })
-          .catch((error) => {
-            console.error("❌ Error al registrar el Service Worker:", error);
-          });
-      });
-    } else {
-      console.warn("⚠️ Service Worker no soportado en este navegador.");
+      navigator.serviceWorker
+        .register(`/service-worker.js?v=${Date.now()}`) // ← usa tu nombre real
+        .then((reg) => {
+          console.log("✅ Service Worker registrado:", reg.scope);
+        })
+        .catch((err) => {
+          console.error("❌ Error registrando SW:", err);
+        });
     }
   }, []);
+
 
   return (
     <html lang="es">
