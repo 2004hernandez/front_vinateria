@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "../../src/components/Navbar";
@@ -21,13 +21,16 @@ const geistMono = localFont({
 });
 
 export default function RootLayout({ children }) {
-  // 👇 Aquí se mueve toda la lógica del registro del Service Worker
+  const [isOnline, setIsOnline] = useState(true);
+
+  // Registrar SW + detectar conexión
   useEffect(() => {
     console.log("🟢 RootLayout montado");
 
+    // Registrar service worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
-        .register(`/service-worker.js?v=${Date.now()}`) // ← usa tu nombre real
+        .register(`/service-worker.js?v=${Date.now()}`)
         .then((reg) => {
           console.log("✅ Service Worker registrado:", reg.scope);
         })
@@ -35,8 +38,21 @@ export default function RootLayout({ children }) {
           console.error("❌ Error registrando SW:", err);
         });
     }
-  }, []);
 
+    // Detectar conexión
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    setIsOnline(navigator.onLine);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <html lang="es">
@@ -51,10 +67,20 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        {/* 🔴 Banner de internet offline */}
+        {!isOnline && (
+          <div className="w-full bg-red-600 text-white text-center py-2 fixed top-0 left-0 z-50">
+            ⚠️ Sin conexión a internet. Algunos datos pueden no estar actualizados.
+          </div>
+        )}
+
         <AuthProvider>
           <LogoProvider>
             <Navbar />
-            {children}
+
+            {/* Ajusta el contenido si el banner está activo */}
+            <div className={!isOnline ? "mt-10" : ""}>{children}</div>
+
             <Footer />
           </LogoProvider>
         </AuthProvider>
