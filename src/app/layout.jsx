@@ -34,20 +34,39 @@ export default function RootLayout({ children }) {
         .catch((err) => console.error("❌ Error registrando SW:", err));
     }
 
-    // --- Detector real de conexión con fetch + timeout ---
+    // --- Detector real de conexión ---
     const checkConnection = async () => {
+      console.log("🔍 Verificando conexión...");
+
       try {
         const controller = new AbortController();
-        const timeout = setTimeout(() => controller.abort(), 2000);
+        const timeout = setTimeout(() => {
+          controller.abort();
+          console.warn("⏳ Timeout del fetch → posiblemente sin conexión");
+        }, 2000);
 
-        await fetch("/favicon.ico", {
+        const url = "https://httpbin.org/get?ts=" + Date.now();
+        console.log("🌐 Fetch a:", url);
+
+        const res = await fetch(url, {
+          method: "GET",
           cache: "no-store",
           signal: controller.signal,
         });
 
         clearTimeout(timeout);
+
+        if (!res.ok) {
+          console.error("⚠️ Respuesta recibida pero con error HTTP", res.status);
+          setIsOnline(false);
+          return;
+        }
+
+        console.log("🟢 Conexión OK");
         setIsOnline(true);
+
       } catch (e) {
+        console.error("🔴 Error al verificar conexión:", e);
         setIsOnline(false);
       }
     };
