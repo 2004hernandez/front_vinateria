@@ -21,63 +21,49 @@ const geistMono = localFont({
 });
 
 export default function RootLayout({ children }) {
-  const [isOnline, setIsOnline] = useState(true);
+  // 🔴 Estado de conexión
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
-    console.log("🟢 RootLayout montado");
+    console.log("🟢 RootLayout montado — iniciando lógica de conexión y SW");
 
-    // Registrar Service Worker
+    // --- Registrar SW ---
     if ("serviceWorker" in navigator) {
+      console.log("📦 Intentando registrar Service Worker...");
+
       navigator.serviceWorker
         .register(`/service-worker.js?v=${Date.now()}`)
-        .then((reg) => console.log("✅ Service Worker registrado:", reg.scope))
-        .catch((err) => console.error("❌ Error registrando SW:", err));
+        .then((reg) => {
+          console.log("✅ Service Worker registrado correctamente:", reg.scope);
+        })
+        .catch((err) => {
+          console.error("❌ Error al registrar el Service Worker:", err);
+        });
+    } else {
+      console.log("⚠️ Este navegador NO soporta Service Workers");
     }
 
-    // --- Detector real de conexión ---
-    const checkConnection = async () => {
-      console.log("🔍 Verificando conexión...");
+    // --- Eventos conexión ---
+    function handleOffline() {
+      console.log("🔴 El dispositivo perdió la conexión a internet");
+      setIsOffline(true);
+    }
 
-      try {
-        const controller = new AbortController();
-        const timeout = setTimeout(() => {
-          controller.abort();
-          console.warn("⏳ Timeout del fetch → posiblemente sin conexión");
-        }, 2000);
+    function handleOnline() {
+      console.log("🟢 El dispositivo recuperó la conexión a internet");
+      setIsOffline(false);
+    }
 
-        const url = "https://httpbin.org/get?ts=" + Date.now();
-        console.log("🌐 Fetch a:", url);
+    console.log("📡 Añadiendo listeners de conexión...");
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
 
-        const res = await fetch(url, {
-          method: "GET",
-          cache: "no-store",
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeout);
-
-        if (!res.ok) {
-          console.error("⚠️ Respuesta recibida pero con error HTTP", res.status);
-          setIsOnline(false);
-          return;
-        }
-
-        console.log("🟢 Conexión OK");
-        setIsOnline(true);
-
-      } catch (e) {
-        console.error("🔴 Error al verificar conexión:", e);
-        setIsOnline(false);
-      }
+    // Cleanup
+    return () => {
+      console.log("♻️ Limpiando listeners de conexión...");
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
     };
-
-    // Ejecutar una vez al cargar
-    checkConnection();
-
-    // Revisar cada 4 segundos
-    const interval = setInterval(checkConnection, 4000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -93,20 +79,18 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* 🔴 Banner de internet offline */}
-        {!isOnline && (
-          <div className="w-full bg-red-600 text-white text-center py-2 fixed top-0 left-0 z-50">
-            ⚠️ Sin conexión a internet. Algunos datos pueden no estar actualizados.
-          </div>
-        )}
-
         <AuthProvider>
           <LogoProvider>
             <Navbar />
 
-            {/* Ajustar margen si aparece banner */}
-            <div className={!isOnline ? "mt-10" : ""}>{children}</div>
+            {/* 🔥 Notificación flotante sin conexión */}
+            {isOffline && (
+              <div className="fixed bottom-5 right-5 bg-red-600 text-white px-4 py-3 rounded-xl shadow-xl z-[9999] animate-pulse">
+                🔴 Sin conexión — revisa tu internet
+              </div>
+            )}
 
+            {children}
             <Footer />
           </LogoProvider>
         </AuthProvider>
