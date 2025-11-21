@@ -5,9 +5,10 @@ import { useState, useEffect } from "react";
 export default function ConnectionProvider({ children }) {
   const [isOffline, setIsOffline] = useState(null);
 
+  // ✔ No usar Google (CORS bloquea)
   async function checkRealConnection() {
     try {
-      await fetch("https://www.google.com/favicon.ico", { method: "HEAD" });
+      await fetch("https://cors.cloudflare.com", { method: "HEAD" });
       return true;
     } catch {
       return false;
@@ -17,7 +18,6 @@ export default function ConnectionProvider({ children }) {
   useEffect(() => {
     console.log("🔥 ConnectionProvider montado — verificando conexión...");
 
-    // 🔍 Estado inicial
     checkRealConnection().then((online) => {
       setIsOffline(!online);
       console.log("🌐 Estado inicial real:", online ? "ONLINE" : "OFFLINE");
@@ -30,12 +30,11 @@ export default function ConnectionProvider({ children }) {
 
     function handleOnline() {
       console.log("🟢 Evento: online");
-      setIsOffline(false);
 
-      // Verificación real al reconectar
+      // obligación: verificar inmediatamente
       checkRealConnection().then((online) => {
-        console.log("🔄 Verificación tras evento:", online);
         setIsOffline(!online);
+        console.log("🔄 Verificación tras evento:", online);
       });
     }
 
