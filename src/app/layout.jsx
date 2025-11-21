@@ -23,35 +23,42 @@ const geistMono = localFont({
 export default function RootLayout({ children }) {
   const [isOnline, setIsOnline] = useState(true);
 
-  // Registrar SW + detectar conexión
   useEffect(() => {
     console.log("🟢 RootLayout montado");
 
-    // Registrar service worker
+    // Registrar Service Worker
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register(`/service-worker.js?v=${Date.now()}`)
-        .then((reg) => {
-          console.log("✅ Service Worker registrado:", reg.scope);
-        })
-        .catch((err) => {
-          console.error("❌ Error registrando SW:", err);
-        });
+        .then((reg) => console.log("✅ Service Worker registrado:", reg.scope))
+        .catch((err) => console.error("❌ Error registrando SW:", err));
     }
 
-    // Detectar conexión
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
+    // --- Detector real de conexión con fetch + timeout ---
+    const checkConnection = async () => {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 2000);
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+        await fetch("/favicon.ico", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
 
-    setIsOnline(navigator.onLine);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+        clearTimeout(timeout);
+        setIsOnline(true);
+      } catch (e) {
+        setIsOnline(false);
+      }
     };
+
+    // Ejecutar una vez al cargar
+    checkConnection();
+
+    // Revisar cada 4 segundos
+    const interval = setInterval(checkConnection, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -78,7 +85,7 @@ export default function RootLayout({ children }) {
           <LogoProvider>
             <Navbar />
 
-            {/* Ajusta el contenido si el banner está activo */}
+            {/* Ajustar margen si aparece banner */}
             <div className={!isOnline ? "mt-10" : ""}>{children}</div>
 
             <Footer />
