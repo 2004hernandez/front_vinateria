@@ -60,6 +60,12 @@ self.addEventListener('activate', (event) => {
 // =======================
 self.addEventListener('fetch', (event) => {
   const request = event.request;
+  const url = new URL(request.url);
+
+  // ❌ NO interceptar ping.json nunca
+  if (url.pathname === "/ping.json") {
+    return;
+  }
 
   const isAPI = request.url.startsWith(API_BASE_URL);
   const isImage = request.destination === 'image';
@@ -90,6 +96,7 @@ self.addEventListener('fetch', (event) => {
     })
   );
 });
+
 
 // =======================
 // FUNCIÓN AUXILIAR — cache then network

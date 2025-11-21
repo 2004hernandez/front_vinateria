@@ -1,59 +1,64 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function ConnectionProvider({ children }) {
-  const [isOffline, setIsOffline] = useState(null);
+  const [isOffline, setIsOffline] = useState(false);
 
-  // ✔ No usar Google (CORS bloquea)
-  async function checkRealConnection() {
+  async function checkLocalPing() {
     try {
-      await fetch("https://cors.cloudflare.com", { method: "HEAD" });
-      return true;
-    } catch {
+      const res = await fetch("/ping.json?cacheBust=" + Date.now(), {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      return res.ok; // Si responde → estás online
+    } catch (e) {
       return false;
     }
   }
 
   useEffect(() => {
-    console.log("🔥 ConnectionProvider montado — verificando conexión...");
+    console.log("⚡ Inicializando detector de conexión...");
 
-    checkRealConnection().then((online) => {
+    const verify = async () => {
+      const online = await checkLocalPing();
+      console.log("💾 Ping local:", online);
       setIsOffline(!online);
-      console.log("🌐 Estado inicial real:", online ? "ONLINE" : "OFFLINE");
-    });
+    };
+
+    verify();
+
+    function handleOnline() {
+      console.log("🟢 Evento ONLINE del navegador");
+      verify();
+    }
 
     function handleOffline() {
-      console.log("🔴 Evento: offline");
+      console.log("🔴 Evento OFFLINE del navegador");
       setIsOffline(true);
     }
 
-    function handleOnline() {
-      console.log("🟢 Evento: online");
-
-      // obligación: verificar inmediatamente
-      checkRealConnection().then((online) => {
-        setIsOffline(!online);
-        console.log("🔄 Verificación tras evento:", online);
-      });
-    }
-
-    window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    const interval = setInterval(verify, 5000); // verificación cada 5s
 
     return () => {
-      window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+      clearInterval(interval);
     };
   }, []);
 
   return (
     <>
       {isOffline && (
-        <div className="fixed bottom-5 right-5 bg-red-600 text-white px-4 py-3 rounded-xl shadow-xl z-[9999] animate-pulse">
-          🔴 Sin conexión — revisa tu internet
+        <div className="fixed bottom-5 right-5 bg-red-600 text-white px-4 py-3 rounded-xl shadow-lg z-[9999] animate-pulse">
+          🔴 No hay conexión a Internet
         </div>
       )}
+
       {children}
     </>
   );
