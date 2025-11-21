@@ -7,7 +7,7 @@ import Navbar from "../../src/components/Navbar";
 import Footer from "../../src/components/Footer";
 import { AuthProvider } from "../context/authContext";
 import { LogoProvider } from "../context/LogoContext";
-
+import ConnectionProvider from "./ConnectionProvider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -21,8 +21,6 @@ const geistMono = localFont({
 });
 
 export default function RootLayout({ children }) {
-  // 🔴 Estado de conexión
-  const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   useEffect(() => {
     console.log("🟢 RootLayout montado — iniciando lógica de conexión y SW");
@@ -42,28 +40,6 @@ export default function RootLayout({ children }) {
     } else {
       console.log("⚠️ Este navegador NO soporta Service Workers");
     }
-
-    // --- Eventos conexión ---
-    function handleOffline() {
-      console.log("🔴 El dispositivo perdió la conexión a internet");
-      setIsOffline(true);
-    }
-
-    function handleOnline() {
-      console.log("🟢 El dispositivo recuperó la conexión a internet");
-      setIsOffline(false);
-    }
-
-    console.log("📡 Añadiendo listeners de conexión...");
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-
-    // Cleanup
-    return () => {
-      console.log("♻️ Limpiando listeners de conexión...");
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-    };
   }, []);
 
   return (
@@ -81,17 +57,11 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <LogoProvider>
+            <ConnectionProvider>
             <Navbar />
-
-            {/* 🔥 Notificación flotante sin conexión */}
-            {isOffline && (
-              <div className="fixed bottom-5 right-5 bg-red-600 text-white px-4 py-3 rounded-xl shadow-xl z-[9999] animate-pulse">
-                🔴 Sin conexión — revisa tu internet
-              </div>
-            )}
-
             {children}
             <Footer />
+            </ConnectionProvider>
           </LogoProvider>
         </AuthProvider>
       </body>
